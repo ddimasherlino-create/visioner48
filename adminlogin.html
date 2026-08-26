@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Login Admin Visioner48</title>
+    <title>Login Admin - Visioner48</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -19,27 +18,27 @@
             align-items: center;
             justify-content: center;
             font-family: Arial, sans-serif;
-            background: #9ca3af;
+            background: #f2f3f5;
         }
 
         .login-box {
             width: 90%;
-            max-width: 380px;
-            background: #9ca3af;
+            max-width: 400px;
+            background: white;
             padding: 25px;
             border-radius: 18px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,.12);
         }
 
-        h1 {
+        h2 {
             text-align: center;
+            margin-top: 0;
         }
 
         input {
             width: 100%;
             padding: 14px;
-            margin-top: 10px;
-            box-sizing: border-box;
+            margin: 8px 0 14px;
             border: 1px solid #ccc;
             border-radius: 10px;
             font-size: 16px;
@@ -48,59 +47,52 @@
         button {
             width: 100%;
             padding: 14px;
-            margin-top: 15px;
-            border: none;
+            border: 0;
             border-radius: 10px;
-            background: #191F3B;
+            background: #075e54;
             color: white;
             font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: .6;
         }
 
         #pesan {
-            text-align: center;
             margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <div class="login-box">
 
-    <h1>🔐 Admin Visioner48</h1>
-
-    <p>
-        Login untuk mengelola News / Berita.
-    </p>
-
+    <h2>Login Admin Visioner48</h2>
 
     <input
-        type="email"
         id="email"
-        placeholder="Email Admin"
+        type="email"
+        placeholder="Email admin"
+        autocomplete="email"
     >
-
 
     <input
-        type="password"
         id="password"
+        type="password"
         placeholder="Password"
+        autocomplete="current-password"
     >
 
-
-    <button
-        id="loginBtn"
-        type="button"
-    >
+    <button id="loginBtn" type="button">
         LOGIN
     </button>
 
-
-    <p id="pesan"></p>
+    <div id="pesan"></div>
 
 </div>
 
@@ -108,33 +100,57 @@
 <script type="module">
 
     import {
-        auth
-    }
-    from "./firebase-config.js";
-
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
     import {
+        getAuth,
         signInWithEmailAndPassword
-    }
-    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+    /*
+    =====================================
+    FIREBASE CONFIG
+    =====================================
+
+    GANTI bagian di bawah dengan
+    firebaseConfig milik project kamu.
+
+    JANGAN membuat project Firebase baru.
+    Pakai project yang sama dengan website
+    Visioner48 kamu.
+    */
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDvHngeBgcjPgdIVtlR5w_3apGiornP-W4",
+    authDomain: "visioner48-9b51e.firebaseapp.com",
+    databaseURL: "https://visioner48-9b51e-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    projectId: "visioner48-9b51e",
+    storageBucket: "visioner48-9b51e.firebasestorage.app",
+    messagingSenderId: "691930246088",
+    appId: "1:691930246088:web:efd50a623e8321d97feefd"
+};
+
+    const app =
+        initializeApp(firebaseConfig);
+
+
+    const auth =
+        getAuth(app);
 
 
     const loginBtn =
-        document.getElementById(
-            "loginBtn"
-        );
+        document.getElementById("loginBtn");
 
 
     const pesan =
-        document.getElementById(
-            "pesan"
-        );
+        document.getElementById("pesan");
 
 
     loginBtn.addEventListener(
         "click",
         async function () {
-
 
             const email =
                 document
@@ -149,25 +165,26 @@
                 .value;
 
 
-            if (
-                email === "" ||
-                password === ""
-            ) {
+            if (!email || !password) {
 
-                pesan.innerText =
-                    "Isi email dan password.";
+                pesan.textContent =
+                    "Email dan password wajib diisi.";
 
                 return;
 
             }
 
 
-            pesan.innerText =
-                "Sedang login...";
+            loginBtn.disabled = true;
+
+            loginBtn.textContent =
+                "LOGIN...";
+
+            pesan.textContent =
+                "Sedang memproses login...";
 
 
             try {
-
 
                 await signInWithEmailAndPassword(
                     auth,
@@ -176,40 +193,35 @@
                 );
 
 
-                pesan.innerText =
-                    "Login berhasil!";
+                pesan.textContent =
+                    "Login berhasil. Membuka Admin...";
 
 
-                setTimeout(
-                    function () {
-
-                        window.location.href =
-                            "admin.html";
-
-                    },
-                    500
-                );
+                window.location.href =
+                    "admin.html";
 
 
-            }
-
-            catch (error) {
+            } catch (error) {
 
                 console.error(error);
 
-                pesan.innerText =
+
+                pesan.textContent =
                     "Login gagal: " +
-                    error.code;
+                    error.message;
+
+
+                loginBtn.disabled = false;
+
+                loginBtn.textContent =
+                    "LOGIN";
 
             }
-
 
         }
     );
 
 </script>
 
-
 </body>
-
 </html>
