@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login Admin Visioner48</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #9ca3af;
+        }
+
+        .login-box {
+            width: 90%;
+            max-width: 380px;
+            background: #9ca3af;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #191F3B;
+            color: white;
+            font-size: 16px;
+        }
+
+        #pesan {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-box">
+
+    <h1>🔐 Admin Visioner48</h1>
+
+    <p>
+        Login untuk mengelola News / Berita.
+    </p>
+
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Email Admin"
+    >
+
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+    >
+
+
+    <button
+        id="loginBtn"
+        type="button"
+    >
+        LOGIN
+    </button>
+
+
+    <p id="pesan"></p>
+
+</div>
+
+
+<script type="module">
+
+    import {
+        auth
+    }
+    from "./firebase-config.js";
+
+
+    import {
+        signInWithEmailAndPassword
+    }
+    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+    const loginBtn =
+        document.getElementById(
+            "loginBtn"
+        );
+
+
+    const pesan =
+        document.getElementById(
+            "pesan"
+        );
+
+
+    loginBtn.addEventListener(
+        "click",
+        async function () {
+
+
+            const email =
+                document
+                .getElementById("email")
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById("password")
+                .value;
+
+
+            if (
+                email === "" ||
+                password === ""
+            ) {
+
+                pesan.innerText =
+                    "Isi email dan password.";
+
+                return;
+
+            }
+
+
+            pesan.innerText =
+                "Sedang login...";
+
+
+            try {
+
+
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+                pesan.innerText =
+                    "Login berhasil!";
+
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            "admin.html";
+
+                    },
+                    500
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                pesan.innerText =
+                    "Login gagal: " +
+                    error.code;
+
+            }
+
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
