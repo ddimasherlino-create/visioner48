@@ -272,7 +272,7 @@ const daftarSoal = [
     {
         soal: "Jiko siapakah: 'Serigala tangguh dibawah sinar purnama, panggil aku auuuu-'?",
         pilihan: ["Auwia", "Intan", "Jemima", "Mikaela"],
-        jawaban: "Auwiw"
+        jawaban: "Auwia"
     },
 
     {
